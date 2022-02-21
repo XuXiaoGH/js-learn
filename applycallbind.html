@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,44 +8,97 @@
     <title>Document</title>
     <script>
         function a(m, n) {
-            console.log(this);
             console.log(this.name);
             console.log(m, n);
         }
 
-        function b () {
-            this.name = 'xuxiao';
-        }
+        const b = { name: 'xuxiao' }
 
         // a(1, 2);
         // a.call(b, 1, 2);
         // a.apply(b, [1, 2]);
         // a.bind(b, 1,2)();
-        
+
         // 其实 apply call bind 都是执行 a 方法，但是把内部的 this 偷偷给换到第一个参数，就是 this转移
 
-        
 
-        // 创建新对象 new
 
-        function Man () {
-            this.sex = 'man';
+        // ================  创建新对象 new ===================
+
+        // function Man () {
+        //     this.sex = 'man';
+        // }
+
+        // function newMethon(Fn) {
+        //     // 创建新对象
+        //     const a = {};
+        //     // 将隐式原型指向函数原型
+        //     a.__proto__ = Fn.prototype;
+        //     // 执行this转移，执行构造函数，继承函数的属性
+        //     Man.call(a);
+        //     // 返回新对象
+        //     return a;
+        // }
+
+        // console.log(newMethon(Man));
+
+
+        // ================  自己实现  call ======================
+        // Function.prototype.call1 = function (obj) {
+        //     const fixArgument = [];
+        //     for (let i = 1; i < arguments.length; i++) {
+        //         fixArgument.push(`arguments[${i}]`);
+        //     }
+        //     obj = obj ? Object(obj) : window;
+        //     obj.fn = this;
+        //     eval(`obj.fn(${fixArgument})`);
+        //     delete obj.fn;
+        // }
+        // a.call1(b, 1, 2);
+        // a.call1(null, 1, 2);
+        // a.call1(1, 1, 2);
+
+        // ================  自己实现  apply ======================
+        // Function.prototype.apply1 = function (obj) {
+        //     obj = obj ? Object(obj) : window;
+        //     obj.fn = this;
+        //     eval(`obj.fn(${arguments[1]})`);
+        //     delete obj.fn;
+        // }
+        // a.apply1(b, [1, 2]);
+        // a.apply1(null, [1, 2]);
+        // a.apply1(1, [1, 2]);
+
+        // ================  自己实现  bind ======================
+        //  Function.prototype.bind1 = function (obj) {
+        //     obj = obj ? Object(obj) : window;
+        //     const fn = this;
+        //     // 这一行，就是 Array 自己执行了 slice，然后 agr在内部执行了，类似于 夺舍
+        //     const fixArg = Array.prototype.slice.call(arguments, 1);
+        //      return function () {
+        //         fn.apply(obj, fixArg);
+        //     }
+        // }
+        // a.bind1(b, 1, 2)();
+
+
+        // =============  bind 支持  柯里化
+         Function.prototype.bind1 = function (obj) {
+            obj = obj ? Object(obj) : window;
+            const fn = this;
+            // 这一行，就是 Array 自己执行了 slice，然后 agr在内部执行了，类似于 夺舍
+            const fixArg = Array.prototype.slice.call(arguments, 1);
+             return function () {
+                 const params = Array.prototype.slice.call(arguments);
+                fn.apply(obj, fixArg.concat(params));
+            }
         }
-    
-        function newMethon() {
-            // 创建新对象
-            const a = {};
-            a.__proto__ = Man.prototype;
-            Man.call(a);
-            return a;
-        }
-
-        console.log(newMethon());
-
-
+        a.bind1(b, 1)(2);
     </script>
 </head>
+
 <body>
-    
+
 </body>
+
 </html>

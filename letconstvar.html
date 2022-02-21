@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        
+        
+        // ==============  var：没有块的概念，可以跨块运行，但是不能跨函数
+        function a() {
+            var m = 1;
+        }
+        function b() {
+            var n = 2
+            console.log(m);
+        }
+        b();  // m 未定义
+
+
+        // ===============  let const
+        function c () {
+
+            // 此处 var 会有变量提升，let  const 不会有，未定义之前无法使用，这里会存在暂时性死区
+            console.log(m); // undifined
+            console.log(n); // 没初始化
+            console.log(o); // 没初始化
+            var m = 1;
+            let n = 2;
+            const o = 3;
+
+            // const 必须赋值
+            let m;
+            const n;
+            console.log(m); //  undifined
+            console.log(n); // 报错，const 必须赋值
+        }
+        c();
+
+
+        // 总结一下：
+        // 1、var 没有块的概念，有变量提升，可以跨块使用，不能夸函数
+        // 2、let const 没有变量提升，必须提前定义才能使用，不然会有暂时性死区
+        // 3、const 必须有值，常量值不能被修改，引用可以被修改，可以使用冻结 freeze
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
